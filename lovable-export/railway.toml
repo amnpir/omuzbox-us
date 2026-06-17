@@ -1,8 +1,10 @@
+[phases.setup]
+nixPkgs = ["nodejs_22", "bun"]
+
 [build]
-builder = "nixpacks"
 buildCommand = "bun install && bun run build"
 
 [deploy]
-startCommand = "bunx serve dist/client -s -l $PORT"
+startCommand = "node .output/server/index.mjs"
 healthcheckPath = "/"
-healthcheckTimeout = 60
+healthcheckTimeout = 120

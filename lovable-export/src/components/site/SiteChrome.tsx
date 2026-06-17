@@ -12,7 +12,7 @@ function Logo() {
   return (
     <Link to={SITE_ROUTES.home} className="flex items-center gap-2.5 group" aria-label="Omuzbox">
       <OmuzboxLogo className="transition-transform group-hover:rotate-[-6deg]" />
-      <span className="text-[1.15rem] font-extrabold tracking-tight">Omuzbox</span>
+      <span className="text-sm font-bold tracking-tight lowercase">omuzbox</span>
     </Link>
   );
 }
@@ -225,7 +225,7 @@ export function SiteFooter() {
           <div className="md:col-span-5">
             <div className="flex items-center gap-2.5">
               <OmuzboxLogo variant="light" />
-              <span className="text-lg font-extrabold tracking-tight text-white">Omuzbox</span>
+              <span className="text-sm font-bold tracking-tight text-white lowercase">omuzbox</span>
             </div>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-white/55">{t.footer.desc}</p>
             <address className="mt-4 max-w-sm not-italic text-xs leading-relaxed text-white/45">

@@ -38,7 +38,7 @@ export function buildJsonLd(t: Translations) {
       "@type": "Offer",
       category: "Paid",
       priceCurrency: "USD",
-      price: "42",
+      price: "35",
       url: `${SITE_URL}/#pricing`,
     },
   };

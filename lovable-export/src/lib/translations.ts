@@ -352,8 +352,8 @@ const EN: Translations = {
       {
         name: "Progress",
         count: "16 lessons",
-        price: "$48",
-        total: "$768 total",
+        price: "$45",
+        total: "$720 total",
         perk: "Best for regular learners",
         features: ["16 live 1-on-1 lessons", "Personal study plan", "Telegram speaking bot", "Priority booking"],
         badge: "Popular",
@@ -362,8 +362,8 @@ const EN: Translations = {
       {
         name: "Maximum",
         count: "32 lessons",
-        price: "$42",
-        total: "$1,344 total",
+        price: "$35",
+        total: "$1,120 total",
         perk: "Fastest path to fluency",
         features: ["32 live 1-on-1 lessons", "Dedicated teacher match", "Weekly homework feedback", "Speaking clubs"],
         badge: "Best value",
@@ -865,8 +865,8 @@ const RU: Translations = {
       {
         name: "Прогресс",
         count: "16 уроков",
-        price: "$48",
-        total: "$768",
+        price: "$45",
+        total: "$720",
         perk: "Оптимально для регулярных занятий",
         features: ["Всё из «Старт»", "Разговорный клуб 2×/мес", "Telegram-бот для речи", "Отчёт о прогрессе"],
         badge: "Популярный",
@@ -875,8 +875,8 @@ const RU: Translations = {
       {
         name: "Максимум",
         count: "32 урока",
-        price: "$42",
-        total: "$1,344",
+        price: "$35",
+        total: "$1,120",
         perk: "Максимальный результат за 4 месяца",
         features: ["Всё из «Прогресс»", "Уроки с носителем", "Гарантия результата", "Безлимит клубов"],
         badge: "Выгодный",

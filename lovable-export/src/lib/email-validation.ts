@@ -2,12 +2,6 @@
 const EMAIL_RE =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 
-const ALLOWED_TLDS = new Set([
-  "com", "org", "net", "edu", "gov", "io", "co", "us", "uk", "ca", "au", "de", "fr", "es", "it",
-  "nl", "be", "ch", "at", "pl", "cz", "se", "no", "dk", "fi", "ie", "nz", "sg", "hk", "in", "br",
-  "mx", "me", "info", "biz", "pro", "dev", "app", "email", "live", "cloud", "tech", "online",
-]);
-
 const TRUSTED_EMAIL_DOMAINS = new Set([
   "gmail.com",
   "googlemail.com",
@@ -30,8 +24,13 @@ const TRUSTED_EMAIL_DOMAINS = new Set([
   "zoho.com",
   "yandex.com",
   "yandex.ru",
+  "ya.ru",
   "mail.ru",
   "inbox.ru",
+  "bk.ru",
+  "list.ru",
+  "internet.ru",
+  "rambler.ru",
   "qq.com",
   "163.com",
   "fastmail.com",
@@ -102,9 +101,18 @@ function domainHostLetters(domain: string): string {
   return parts.slice(0, -1).join("").replace(/[^a-z]/g, "");
 }
 
+function isTrustedDomain(domain: string): boolean {
+  const base = normalizeDomain(domain);
+  return TRUSTED_EMAIL_DOMAINS.has(base) || base.endsWith(".edu") || base.endsWith(".gov");
+}
+
+function isAllowedTld(tld: string): boolean {
+  return /^[a-z]{2,63}$/.test(tld);
+}
+
 function looksLikeRealDomain(domain: string): boolean {
   const base = normalizeDomain(domain);
-  if (TRUSTED_EMAIL_DOMAINS.has(base)) return true;
+  if (isTrustedDomain(base)) return true;
   if (base.endsWith(".edu") || base.endsWith(".gov")) return true;
 
   const primaryLabel = base.split(".")[0] ?? "";
@@ -138,7 +146,7 @@ export function validateTrialEmail(raw: string): EmailValidationResult {
   }
 
   const tld = domain.split(".").pop() ?? "";
-  if (!ALLOWED_TLDS.has(tld)) {
+  if (!isAllowedTld(tld)) {
     return { ok: false, reason: "invalid" };
   }
 

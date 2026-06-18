@@ -4,17 +4,11 @@ import { resolveMx } from "node:dns/promises";
 const EMAIL_RE =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
 
-const ALLOWED_TLDS = new Set([
-  "com", "org", "net", "edu", "gov", "io", "co", "us", "uk", "ca", "au", "de", "fr", "es", "it",
-  "nl", "be", "ch", "at", "pl", "cz", "se", "no", "dk", "fi", "ie", "nz", "sg", "hk", "in", "br",
-  "mx", "me", "info", "biz", "pro", "dev", "app", "email", "live", "cloud", "tech", "online",
-]);
-
 const TRUSTED_EMAIL_DOMAINS = new Set([
   "gmail.com", "googlemail.com", "yahoo.com", "yahoo.co.uk", "outlook.com", "hotmail.com", "live.com",
   "msn.com", "icloud.com", "me.com", "mac.com", "aol.com", "protonmail.com", "proton.me", "pm.me",
-  "mail.com", "gmx.com", "gmx.net", "zoho.com", "yandex.com", "yandex.ru", "mail.ru", "inbox.ru",
-  "qq.com", "163.com", "fastmail.com", "hey.com",
+  "mail.com", "gmx.com", "gmx.net", "zoho.com", "yandex.com", "yandex.ru", "ya.ru", "mail.ru", "inbox.ru",
+  "bk.ru", "list.ru", "internet.ru", "rambler.ru", "qq.com", "163.com", "fastmail.com", "hey.com",
 ]);
 
 const DISPOSABLE_DOMAINS = new Set([
@@ -26,6 +20,8 @@ const DISPOSABLE_DOMAINS = new Set([
   "tempmail.net", "tempmailo.com", "tempinbox.com", "throwaway.email", "trashmail.com", "trashmail.net",
   "yopmail.com", "yopmail.fr", "yopmail.net",
 ]);
+
+const MX_LOOKUP_MS = 4000;
 
 function normalizeDomain(domain: string): string {
   return domain.replace(/^www\./, "").toLowerCase();
@@ -52,6 +48,10 @@ function isTrustedDomain(domain: string): boolean {
   return TRUSTED_EMAIL_DOMAINS.has(base) || base.endsWith(".edu") || base.endsWith(".gov");
 }
 
+function isAllowedTld(tld: string): boolean {
+  return /^[a-z]{2,63}$/.test(tld);
+}
+
 function looksLikeRealDomain(domain: string): boolean {
   const base = normalizeDomain(domain);
   if (isTrustedDomain(base)) return true;
@@ -72,11 +72,17 @@ function looksLikeRealDomain(domain: string): boolean {
   return true;
 }
 
-async function domainHasMx(domain: string): Promise<boolean> {
+async function domainHasMx(domain: string): Promise<boolean | null> {
   try {
-    const records = await resolveMx(normalizeDomain(domain));
+    const records = await Promise.race([
+      resolveMx(normalizeDomain(domain)),
+      new Promise<never>((_, reject) => {
+        setTimeout(() => reject(new Error("mx-timeout")), MX_LOOKUP_MS);
+      }),
+    ]);
     return records.length > 0;
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message === "mx-timeout") return null;
     return false;
   }
 }
@@ -93,7 +99,7 @@ export async function validateTrialEmail(raw: string): Promise<string | null> {
   }
 
   const tld = domain.split(".").pop() ?? "";
-  if (!ALLOWED_TLDS.has(tld)) {
+  if (!isAllowedTld(tld)) {
     return "Valid email is required";
   }
 
@@ -107,7 +113,7 @@ export async function validateTrialEmail(raw: string): Promise<string | null> {
 
   if (!isTrustedDomain(domain)) {
     const hasMx = await domainHasMx(domain);
-    if (!hasMx) {
+    if (hasMx === false) {
       return "Please use a real email address from an active mailbox provider";
     }
   }

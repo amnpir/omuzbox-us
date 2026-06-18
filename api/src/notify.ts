@@ -43,11 +43,20 @@ export async function sendEmail(payload: TrialPayload): Promise<void> {
   }
 }
 
+function telegramChatIds(): string[] {
+  const multi = process.env.TELEGRAM_CHAT_IDS;
+  if (multi) {
+    return multi.split(",").map((id) => id.trim()).filter(Boolean);
+  }
+  const single = process.env.TELEGRAM_CHAT_ID;
+  return single ? [single.trim()] : [];
+}
+
 export async function sendTelegram(payload: TrialPayload): Promise<void> {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) {
-    console.warn("Telegram skipped: TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID not set");
+  const chatIds = telegramChatIds();
+  if (!token || chatIds.length === 0) {
+    console.warn("Telegram skipped: TELEGRAM_BOT_TOKEN or chat id(s) not set");
     return;
   }
 
@@ -57,26 +66,42 @@ export async function sendTelegram(payload: TrialPayload): Promise<void> {
     "🎓 *New Omuzbox trial lesson request*",
     "",
     `*Type:* ${audienceLabel}`,
-    `*Name:* ${payload.name}`,
-    `*Email:* ${payload.email}`,
-    `*Phone:* ${payload.phone}`,
-    `*Promo:* ${payload.promo || "—"}`,
+    `*Name:* ${escapeMarkdown(payload.name)}`,
+    `*Email:* ${escapeMarkdown(payload.email)}`,
+    `*Phone:* ${escapeMarkdown(payload.phone)}`,
+    `*Promo:* ${payload.promo ? escapeMarkdown(payload.promo) : "—"}`,
     `*Landing:* ${landing}`,
     `*Time:* ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })} ET`,
   ].join("\n");
 
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: chatId,
-      text,
-      parse_mode: "Markdown",
-    }),
-  });
+  const results = await Promise.allSettled(
+    chatIds.map(async (chatId) => {
+      const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text,
+          parse_mode: "Markdown",
+        }),
+      });
 
-  if (!res.ok) {
-    const err = await res.text();
-    throw new Error(`Telegram error: ${err}`);
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(`Telegram error for chat ${chatId}: ${err}`);
+      }
+    }),
+  );
+
+  const failed = results.filter((r) => r.status === "rejected");
+  if (failed.length > 0) {
+    console.error(failed);
+    if (failed.length === results.length) {
+      throw failed[0].reason;
+    }
   }
+}
+
+function escapeMarkdown(value: string): string {
+  return value.replace(/([_*[\]()~`>#+\-=|{}.!\\])/g, "\\$1");
 }

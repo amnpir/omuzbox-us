@@ -46,7 +46,10 @@ app.get("/health", (c) =>
     service: "omuzbox-api",
     metaCapi: Boolean(process.env.META_PIXEL_ID && process.env.META_ACCESS_TOKEN),
     email: Boolean(process.env.RESEND_API_KEY),
-    telegram: Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID),
+    telegram: Boolean(
+      process.env.TELEGRAM_BOT_TOKEN &&
+        (process.env.TELEGRAM_CHAT_ID || process.env.TELEGRAM_CHAT_IDS),
+    ),
   }),
 );
 

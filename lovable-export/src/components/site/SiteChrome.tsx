@@ -5,7 +5,7 @@ import { LANG_OPTIONS } from "@/lib/lang";
 import { useLocale } from "@/lib/i18n";
 import { trackCtaClick } from "@/lib/cta";
 import { homeSection, SITE_ROUTES } from "@/lib/site-links";
-import { companyAddressBlock } from "@/lib/company";
+import { companyAddressBlock, COMPANY } from "@/lib/company";
 import { OmuzboxLogo } from "@/components/site/OmuzboxLogo";
 
 function Logo() {
@@ -197,7 +197,7 @@ export function SiteFooter() {
   const { lang, setLang, t } = useLocale();
   const contactLinks = [
     { label: "info@omuzbox.com", href: "mailto:info@omuzbox.com" },
-    { label: "WhatsApp", href: "https://wa.me/48576541989" },
+    { label: "WhatsApp", href: COMPANY.whatsappWaMe },
     { label: "Telegram", href: "https://t.me/omuzboxss" },
   ];
   const schoolHrefs = [homeSection("about"), homeSection("reviews")];

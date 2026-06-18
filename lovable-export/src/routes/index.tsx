@@ -15,6 +15,7 @@ import { trackGaEvent } from "@/lib/ga4";
 import { trackCtaClick } from "@/lib/cta";
 import { homeSection } from "@/lib/site-links";
 import { formatUSPhoneInput, isValidUSPhone, usPhoneToE164 } from "@/lib/phone-us";
+import { validateTrialEmail } from "@/lib/email-validation";
 import { buildJsonLd, JsonLd } from "@/lib/json-ld";
 import { SiteHeader, SiteFooter } from "@/components/site/SiteChrome";
 import { MobileStickyCta } from "@/components/site/MobileStickyCta";
@@ -562,18 +563,42 @@ function TrialForm() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [phoneError, setPhoneError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [successFading, setSuccessFading] = useState(false);
   const [promo, setPromo] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   const bulletIcons = [Target, User2, BookOpen, Headphones];
 
+  useEffect(() => {
+    if (status !== "success") return;
+    setSuccessFading(false);
+    const fadeTimer = window.setTimeout(() => setSuccessFading(true), 8000);
+    const resetTimer = window.setTimeout(() => {
+      setStatus("idle");
+      setSuccessFading(false);
+    }, 10000);
+    return () => {
+      window.clearTimeout(fadeTimer);
+      window.clearTimeout(resetTimer);
+    };
+  }, [status]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg("");
     setPhoneError("");
+    setEmailError("");
     if (!isValidUSPhone(phone)) {
       setPhoneError(t.trial.phoneError);
+      return;
+    }
+    const emailCheck = validateTrialEmail(email);
+    if (!emailCheck.ok) {
+      setEmailError(
+        emailCheck.reason === "disposable" ? t.trial.emailDisposableError : t.trial.emailError,
+      );
       return;
     }
     setStatus("sending");
@@ -647,7 +672,13 @@ function TrialForm() {
               </div>
 
               {status === "success" ? (
-                <div className="mt-6 rounded-2xl bg-emerald-50 border border-emerald-200 p-6 text-emerald-800">
+                <div
+                  className={`mt-6 rounded-2xl bg-emerald-50 border border-emerald-200 p-6 text-emerald-800 transition-opacity duration-[2000ms] ${
+                    successFading ? "opacity-0" : "opacity-100"
+                  }`}
+                  role="status"
+                  aria-live="polite"
+                >
                   <Check className="h-6 w-6 mb-2" />
                   <p className="font-semibold">{t.trial.success}</p>
                 </div>
@@ -674,8 +705,13 @@ function TrialForm() {
                     required
                     autoComplete="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setEmailError("");
+                    }}
                     placeholder={t.trial.email}
+                    error={emailError}
+                    aria-describedby={emailError ? "trial-email-error" : undefined}
                   />
                   <Field
                     id="trial-phone"

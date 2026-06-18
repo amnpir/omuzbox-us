@@ -1,7 +1,8 @@
 export const COMPANY = {
   name: "Omuzbox",
   email: "info@omuzbox.com",
-  whatsapp: "+48 576 541 989",
+  whatsapp: "+1 831 778 1999",
+  whatsappWaMe: "https://wa.me/18317781999",
   telegram: "@omuzboxss",
   address: {
     line1: "8 The Green STE B",

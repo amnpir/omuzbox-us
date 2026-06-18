@@ -1,5 +1,6 @@
 import { Mail, MessageCircle, Send, Clock } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
+import { COMPANY } from "@/lib/company";
 import { homeSection } from "@/lib/site-links";
 
 export function ContactSection() {
@@ -16,7 +17,7 @@ export function ContactSection() {
       icon: MessageCircle,
       label: t.contact.whatsappLabel,
       value: t.contact.whatsappValue,
-      href: "https://wa.me/48576541989",
+      href: COMPANY.whatsappWaMe,
     },
     {
       icon: Send,

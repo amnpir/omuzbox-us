@@ -166,6 +166,8 @@ export type Translations = {
     sending: string;
     errorGeneric: string;
     phoneError: string;
+    emailError: string;
+    emailDisposableError: string;
     consentLabel: string;
   };
   faq: {
@@ -506,7 +508,7 @@ const EN: Translations = {
     cta: "Book a free trial",
     emailLabel: "Email",
     whatsappLabel: "WhatsApp",
-    whatsappValue: "+48 576 541 989",
+    whatsappValue: "+1 831 778 1999",
     telegramLabel: "Telegram",
     telegramValue: "@omuzboxss",
     timezone: "We schedule around US time zones — Eastern, Central, Mountain & Pacific.",
@@ -544,6 +546,8 @@ const EN: Translations = {
     sending: "Sending…",
     errorGeneric: "Something went wrong. Email info@omuzbox.com or WhatsApp us.",
     phoneError: "Enter a valid US phone number: (555) 555-5555",
+    emailError: "Enter a valid email address (e.g. name@company.com).",
+    emailDisposableError: "Please use a permanent email address, not a temporary inbox.",
     consentLabel: "Consent to data processing",
   },
   faq: {
@@ -791,7 +795,7 @@ const RU: Translations = {
     cta: "Записаться на пробный урок",
     emailLabel: "Почта",
     whatsappLabel: "WhatsApp",
-    whatsappValue: "+48 576 541 989",
+    whatsappValue: "+1 831 778 1999",
     telegramLabel: "Telegram",
     telegramValue: "@omuzboxss",
     timezone: "Подбираем время под ваш часовой пояс — от Восточного до Тихоокеанского.",
@@ -905,6 +909,8 @@ const RU: Translations = {
     sending: "Отправляем…",
     errorGeneric: "Ошибка. Напишите на info@omuzbox.com или в WhatsApp.",
     phoneError: "Введите корректный номер США: (555) 555-5555",
+    emailError: "Введите корректный email (например, name@company.com).",
+    emailDisposableError: "Используйте постоянный email, временные ящики не принимаются.",
     consentLabel: "Согласие на обработку данных",
   },
 };

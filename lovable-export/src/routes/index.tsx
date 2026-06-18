@@ -558,7 +558,7 @@ function Reviews() {
 /* -------------------- trial form -------------------- */
 
 function TrialForm() {
-  const { t } = useLocale();
+  const { t, lang } = useLocale();
   const [tab, setTab] = useState<"adult" | "kid">("adult");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -730,9 +730,9 @@ function TrialForm() {
                     label={t.trial.phone}
                     value={phone}
                     country={phoneCountry}
+                    locale={localeForLang(lang)}
                     onCountryChange={(country) => {
                       setPhoneCountry(country);
-                      setPhone("");
                       setPhoneError("");
                     }}
                     onChange={(value) => {

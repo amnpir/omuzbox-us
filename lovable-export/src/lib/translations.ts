@@ -169,6 +169,7 @@ export type Translations = {
     emailError: string;
     emailDisposableError: string;
     consentLabel: string;
+    consentError: string;
   };
   faq: {
     eyebrow: string;
@@ -545,10 +546,11 @@ const EN: Translations = {
     spam: "No spam. We reply within 2 hours on weekdays.",
     sending: "Sending…",
     errorGeneric: "Something went wrong. Email info@omuzbox.com or WhatsApp us.",
-    phoneError: "Enter a valid US phone number: (555) 555-5555",
+    phoneError: "Enter a valid phone number for the selected country.",
     emailError: "Enter a valid email address (e.g. name@company.com).",
     emailDisposableError: "Please use a permanent email address, not a temporary inbox.",
     consentLabel: "Consent to data processing",
+    consentError: "Please agree to data processing before submitting.",
   },
   faq: {
     eyebrow: "FAQ",
@@ -908,10 +910,11 @@ const RU: Translations = {
     spam: "Без спама. Ответим в течение 2 часов в рабочие дни.",
     sending: "Отправляем…",
     errorGeneric: "Ошибка. Напишите на info@omuzbox.com или в WhatsApp.",
-    phoneError: "Введите корректный номер США: (555) 555-5555",
+    phoneError: "Введите корректный номер для выбранной страны.",
     emailError: "Введите корректный email (например, name@company.com).",
     emailDisposableError: "Используйте постоянный email, временные ящики не принимаются.",
     consentLabel: "Согласие на обработку данных",
+    consentError: "Подтвердите согласие на обработку данных перед отправкой.",
   },
 };
 

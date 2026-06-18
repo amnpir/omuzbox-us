@@ -7,13 +7,14 @@ import { randomUUID } from "node:crypto";
 import { sendMetaLead, type TrialPayload } from "./meta.js";
 import { sendEmail, sendTelegram } from "./notify.js";
 import { validateTrialEmail } from "./validate-email.js";
+import { normalizePhoneE164, validatePhone } from "./validate-phone.js";
 
 function validate(body: TrialPayload): string | null {
   if (!body.name?.trim() || body.name.trim().length < 2) return "Name is required";
-  const emailErr = validateTrialEmail(body.email ?? "");
-  if (emailErr) return emailErr;
-  if (!body.phone?.trim() || body.phone.replace(/\D/g, "").length < 6) return "Valid phone is required";
+  const phoneErr = validatePhone(body.phone ?? "");
+  if (phoneErr) return phoneErr;
   if (!["adult", "child"].includes(body.audience)) return "Invalid audience type";
+  if (body.consent !== true) return "Consent to data processing is required";
   return null;
 }
 
@@ -69,6 +70,11 @@ async function submitTrial(c: Context) {
     const body = (await c.req.json()) as TrialPayload;
     const err = validate(body);
     if (err) return c.json({ error: err }, 400);
+
+    const emailErr = await validateTrialEmail(body.email ?? "");
+    if (emailErr) return c.json({ error: emailErr }, 400);
+
+    body.phone = normalizePhoneE164(body.phone);
 
     const eventId = body.eventId ?? randomUUID();
 

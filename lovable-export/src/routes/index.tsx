@@ -4,7 +4,7 @@ import {
   Check, Star, ArrowRight, MessageCircle,
   GraduationCap, Bot, Rocket, Briefcase, BarChart3, Plane, Globe2,
   BookOpen, Baby, Lightbulb, Target, Headphones,
-  ShieldCheck, Heart, Mail, Phone, User2, Tag, Zap, Mic2
+  ShieldCheck, Heart, Mail, User2, Tag, Zap, Mic2
 } from "lucide-react";
 import { IMAGES, WarmImg, IMAGE_DIMS } from "@/lib/images";
 import { useLocale } from "@/lib/i18n";
@@ -14,7 +14,8 @@ import { trackMetaEvent } from "@/lib/meta-pixel";
 import { trackGaEvent } from "@/lib/ga4";
 import { trackCtaClick } from "@/lib/cta";
 import { homeSection } from "@/lib/site-links";
-import { formatUSPhoneInput, isValidUSPhone, usPhoneToE164 } from "@/lib/phone-us";
+import { DEFAULT_PHONE_COUNTRY, isValidPhone, phoneToE164, type PhoneCountry } from "@/lib/phone";
+import { PhoneField } from "@/components/site/PhoneField";
 import { validateTrialEmail } from "@/lib/email-validation";
 import { buildJsonLd, JsonLd } from "@/lib/json-ld";
 import { SiteHeader, SiteFooter } from "@/components/site/SiteChrome";
@@ -562,10 +563,13 @@ function TrialForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [phoneCountry, setPhoneCountry] = useState<PhoneCountry>(DEFAULT_PHONE_COUNTRY);
   const [phoneError, setPhoneError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [successFading, setSuccessFading] = useState(false);
   const [promo, setPromo] = useState("");
+  const [consent, setConsent] = useState(false);
+  const [consentError, setConsentError] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -590,7 +594,12 @@ function TrialForm() {
     setErrorMsg("");
     setPhoneError("");
     setEmailError("");
-    if (!isValidUSPhone(phone)) {
+    setConsentError("");
+    if (!consent) {
+      setConsentError(t.trial.consentError);
+      return;
+    }
+    if (!isValidPhone(phone, phoneCountry)) {
       setPhoneError(t.trial.phoneError);
       return;
     }
@@ -606,9 +615,10 @@ function TrialForm() {
     const result = await submitTrial({
       name,
       email,
-      phone: usPhoneToE164(phone),
+      phone: phoneToE164(phone, phoneCountry),
       promo: promo || undefined,
       audience: tab === "kid" ? "child" : "adult",
+      consent: true,
       landing: "us-55",
       eventId,
     });
@@ -619,7 +629,9 @@ function TrialForm() {
       setName("");
       setEmail("");
       setPhone("");
+      setPhoneCountry(DEFAULT_PHONE_COUNTRY);
       setPromo("");
+      setConsent(false);
     } else {
       setStatus("error");
       setErrorMsg(result.error ?? t.trial.errorGeneric);
@@ -713,23 +725,21 @@ function TrialForm() {
                     error={emailError}
                     aria-describedby={emailError ? "trial-email-error" : undefined}
                   />
-                  <Field
+                  <PhoneField
                     id="trial-phone"
-                    icon={<Phone className="h-4 w-4" />}
-                    type="tel"
-                    name="phone"
                     label={t.trial.phone}
-                    required
-                    autoComplete="tel"
-                    inputMode="tel"
                     value={phone}
-                    onChange={(e) => {
-                      setPhone(formatUSPhoneInput(e.target.value));
+                    country={phoneCountry}
+                    onCountryChange={(country) => {
+                      setPhoneCountry(country);
+                      setPhone("");
                       setPhoneError("");
                     }}
-                    placeholder="(555) 555-5555"
+                    onChange={(value) => {
+                      setPhone(value);
+                      setPhoneError("");
+                    }}
                     error={phoneError}
-                    aria-describedby={phoneError ? "trial-phone-error" : undefined}
                   />
                   <Field
                     id="trial-promo"
@@ -746,13 +756,23 @@ function TrialForm() {
                       type="checkbox"
                       id="trial-consent"
                       name="consent"
-                      defaultChecked
-                      required
+                      checked={consent}
+                      onChange={(e) => {
+                        setConsent(e.target.checked);
+                        setConsentError("");
+                      }}
                       className="mt-0.5 h-4 w-4 accent-[#20AAFD]"
                       aria-label={t.trial.consentLabel}
+                      aria-invalid={consentError ? true : undefined}
+                      aria-describedby={consentError ? "trial-consent-error" : undefined}
                     />
                     <span>{t.trial.consent}</span>
                   </label>
+                  {consentError && (
+                    <p id="trial-consent-error" className="text-sm text-red-600">
+                      {consentError}
+                    </p>
+                  )}
                   {status === "error" && (
                     <p className="text-sm text-red-600">{errorMsg}</p>
                   )}

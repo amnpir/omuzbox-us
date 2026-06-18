@@ -63,15 +63,15 @@ export async function sendTelegram(payload: TrialPayload): Promise<void> {
   const audienceLabel = payload.audience === "adult" ? "Adult" : "Child";
   const landing = payload.landing ?? "us-55";
   const text = [
-    "🎓 *New Omuzbox trial lesson request*",
+    "🎓 <b>New Omuzbox trial lesson request</b>",
     "",
-    `*Type:* ${audienceLabel}`,
-    `*Name:* ${escapeMarkdown(payload.name)}`,
-    `*Email:* ${escapeMarkdown(payload.email)}`,
-    `*Phone:* ${escapeMarkdown(payload.phone)}`,
-    `*Promo:* ${payload.promo ? escapeMarkdown(payload.promo) : "—"}`,
-    `*Landing:* ${landing}`,
-    `*Time:* ${new Date().toLocaleString("en-US", { timeZone: "America/New_York" })} ET`,
+    `<b>Type:</b> ${escapeHtml(audienceLabel)}`,
+    `<b>Name:</b> ${escapeHtml(payload.name)}`,
+    `<b>Email:</b> ${escapeHtml(payload.email)}`,
+    `<b>Phone:</b> ${escapeHtml(payload.phone)}`,
+    `<b>Promo:</b> ${payload.promo ? escapeHtml(payload.promo) : "—"}`,
+    `<b>Landing:</b> ${escapeHtml(landing)}`,
+    `<b>Time:</b> ${escapeHtml(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }))} ET`,
   ].join("\n");
 
   const results = await Promise.allSettled(
@@ -82,7 +82,7 @@ export async function sendTelegram(payload: TrialPayload): Promise<void> {
         body: JSON.stringify({
           chat_id: chatId,
           text,
-          parse_mode: "Markdown",
+          parse_mode: "HTML",
         }),
       });
 
@@ -102,6 +102,9 @@ export async function sendTelegram(payload: TrialPayload): Promise<void> {
   }
 }
 
-function escapeMarkdown(value: string): string {
-  return value.replace(/([_*[\]()~`>#+\-=|{}.!\\])/g, "\\$1");
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
 }

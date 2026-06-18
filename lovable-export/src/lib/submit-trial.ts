@@ -4,6 +4,7 @@ export type TrialPayload = {
   phone: string;
   promo?: string;
   audience: "adult" | "child";
+  consent: boolean;
   landing?: string;
   eventId?: string;
 };

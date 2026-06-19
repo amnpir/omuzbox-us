@@ -4,7 +4,7 @@ import { COMPANY } from "@/lib/company";
 import { homeSection } from "@/lib/site-links";
 
 export function ContactSection() {
-  const { t } = useLocale();
+  const { t, lang } = useLocale();
 
   const channels = [
     {
@@ -42,7 +42,7 @@ export function ContactSection() {
               <Clock className="mt-0.5 h-4 w-4 shrink-0 text-[#20AAFD]" aria-hidden />
               {t.contact.timezone}
             </p>
-            <a href={homeSection("trial")} className="btn-primary mt-8 inline-flex">
+            <a href={homeSection(lang, "trial")} className="btn-primary mt-8 inline-flex">
               {t.contact.cta}
             </a>
           </div>

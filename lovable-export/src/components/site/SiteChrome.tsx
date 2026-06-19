@@ -4,13 +4,15 @@ import { ArrowLeft, ArrowRight, Menu, X } from "lucide-react";
 import { LANG_OPTIONS } from "@/lib/lang";
 import { useLocale } from "@/lib/i18n";
 import { trackCtaClick } from "@/lib/cta";
-import { homeSection, SITE_ROUTES } from "@/lib/site-links";
+import { homeSection, siteRoutes } from "@/lib/site-links";
 import { companyAddressBlock, COMPANY } from "@/lib/company";
 import { OmuzboxLogo } from "@/components/site/OmuzboxLogo";
 
 function Logo() {
+  const { lang } = useLocale();
+  const routes = siteRoutes(lang);
   return (
-    <Link to={SITE_ROUTES.home} className="flex items-center gap-2.5 group" aria-label="Omuzbox">
+    <Link to={routes.home} className="flex items-center gap-2.5 group" aria-label="Omuzbox">
       <OmuzboxLogo className="transition-transform group-hover:rotate-[-6deg]" />
       <span className="text-sm font-bold tracking-tight lowercase">omuzbox</span>
     </Link>
@@ -21,6 +23,7 @@ export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { lang, setLang, t } = useLocale();
+  const routes = siteRoutes(lang);
 
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 8);
@@ -37,12 +40,12 @@ export function SiteHeader() {
   }, [menuOpen]);
 
   const nav = [
-    [t.nav.courses, homeSection("courses")],
-    [t.nav.how, homeSection("how")],
-    [t.nav.pricing, homeSection("pricing")],
-    [t.nav.reviews, homeSection("reviews")],
-    [t.nav.faq, homeSection("faq")],
-    [t.nav.contact, homeSection("contact")],
+    [t.nav.courses, homeSection(lang, "courses")],
+    [t.nav.how, homeSection(lang, "how")],
+    [t.nav.pricing, homeSection(lang, "pricing")],
+    [t.nav.reviews, homeSection(lang, "reviews")],
+    [t.nav.faq, homeSection(lang, "faq")],
+    [t.nav.contact, homeSection(lang, "contact")],
   ] as const;
 
   const closeMenu = () => setMenuOpen(false);
@@ -84,7 +87,7 @@ export function SiteHeader() {
               </div>
 
               <a
-                href={homeSection("trial")}
+                href={homeSection(lang, "trial")}
                 onClick={trackCtaClick}
                 className="btn-primary text-sm py-2.5 px-3 sm:px-5 shrink-0"
               >
@@ -147,7 +150,7 @@ export function SiteHeader() {
             </div>
 
             <a
-              href={homeSection("trial")}
+              href={homeSection(lang, "trial")}
               onClick={(e) => {
                 trackCtaClick(e);
                 closeMenu();
@@ -195,23 +198,24 @@ function FooterCol({ title, links, hrefs }: { title: string; links: string[]; hr
 
 export function SiteFooter() {
   const { lang, setLang, t } = useLocale();
+  const routes = siteRoutes(lang);
   const contactLinks = [
     { label: "info@omuzbox.com", href: "mailto:info@omuzbox.com" },
     { label: "WhatsApp", href: COMPANY.whatsappWaMe },
     { label: "Telegram", href: "https://t.me/omuzboxss" },
   ];
-  const schoolHrefs = [homeSection("about"), homeSection("reviews")];
+  const schoolHrefs = [homeSection(lang, "about"), homeSection(lang, "reviews")];
   const courseHrefs = [
-    homeSection("courses"),
-    homeSection("courses"),
-    homeSection("courses"),
-    homeSection("courses"),
+    homeSection(lang, "courses"),
+    homeSection(lang, "courses"),
+    homeSection(lang, "courses"),
+    homeSection(lang, "courses"),
   ];
   const legalLinks = [
-    { label: t.footer.privacy, href: SITE_ROUTES.privacy },
-    { label: t.footer.terms, href: SITE_ROUTES.offer },
-    { label: t.footer.documents, href: SITE_ROUTES.documents },
-    { label: t.footer.sitemap, href: SITE_ROUTES.sitemap },
+    { label: t.footer.privacy, href: routes.privacy },
+    { label: t.footer.terms, href: routes.offer },
+    { label: t.footer.documents, href: routes.documents },
+    { label: t.footer.sitemap, href: routes.sitemap },
   ];
   const addressLines = companyAddressBlock(lang);
 
@@ -285,9 +289,11 @@ export function SubpageShell({ children }: { children: React.ReactNode }) {
 }
 
 export function SubpageBack({ label }: { label: string }) {
+  const { lang } = useLocale();
+  const routes = siteRoutes(lang);
   return (
     <Link
-      to={SITE_ROUTES.home}
+      to={routes.home}
       className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-[var(--ink)]/60 hover:text-[#20AAFD] transition-colors"
     >
       <ArrowLeft className="h-4 w-4" />
@@ -297,8 +303,9 @@ export function SubpageBack({ label }: { label: string }) {
 }
 
 export function SubpageCta({ label }: { label: string }) {
+  const { lang } = useLocale();
   return (
-    <a href={homeSection("trial")} onClick={trackCtaClick} className="btn-primary mt-10 inline-flex">
+    <a href={homeSection(lang, "trial")} onClick={trackCtaClick} className="btn-primary mt-10 inline-flex">
       {label} <ArrowRight className="h-4 w-4" />
     </a>
   );

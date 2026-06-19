@@ -14,7 +14,14 @@ import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as OfferRouteImport } from './routes/offer'
 import { Route as LevelTestRouteImport } from './routes/level-test'
 import { Route as DocumentsRouteImport } from './routes/documents'
+import { Route as LangRouteRouteImport } from './routes/$lang/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LangIndexRouteImport } from './routes/$lang/index'
+import { Route as LangSitemapRouteImport } from './routes/$lang/sitemap'
+import { Route as LangPrivacyPolicyRouteImport } from './routes/$lang/privacy-policy'
+import { Route as LangOfferRouteImport } from './routes/$lang/offer'
+import { Route as LangLevelTestRouteImport } from './routes/$lang/level-test'
+import { Route as LangDocumentsRouteImport } from './routes/$lang/documents'
 
 const SitemapRoute = SitemapRouteImport.update({
   id: '/sitemap',
@@ -41,19 +48,61 @@ const DocumentsRoute = DocumentsRouteImport.update({
   path: '/documents',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangRouteRoute = LangRouteRouteImport.update({
+  id: '/$lang',
+  path: '/$lang',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LangIndexRoute = LangIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LangRouteRoute,
+} as any)
+const LangSitemapRoute = LangSitemapRouteImport.update({
+  id: '/sitemap',
+  path: '/sitemap',
+  getParentRoute: () => LangRouteRoute,
+} as any)
+const LangPrivacyPolicyRoute = LangPrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => LangRouteRoute,
+} as any)
+const LangOfferRoute = LangOfferRouteImport.update({
+  id: '/offer',
+  path: '/offer',
+  getParentRoute: () => LangRouteRoute,
+} as any)
+const LangLevelTestRoute = LangLevelTestRouteImport.update({
+  id: '/level-test',
+  path: '/level-test',
+  getParentRoute: () => LangRouteRoute,
+} as any)
+const LangDocumentsRoute = LangDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => LangRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$lang': typeof LangRouteRouteWithChildren
   '/documents': typeof DocumentsRoute
   '/level-test': typeof LevelTestRoute
   '/offer': typeof OfferRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/sitemap': typeof SitemapRoute
+  '/$lang/documents': typeof LangDocumentsRoute
+  '/$lang/level-test': typeof LangLevelTestRoute
+  '/$lang/offer': typeof LangOfferRoute
+  '/$lang/privacy-policy': typeof LangPrivacyPolicyRoute
+  '/$lang/sitemap': typeof LangSitemapRoute
+  '/$lang/': typeof LangIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,25 +111,45 @@ export interface FileRoutesByTo {
   '/offer': typeof OfferRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/sitemap': typeof SitemapRoute
+  '/$lang/documents': typeof LangDocumentsRoute
+  '/$lang/level-test': typeof LangLevelTestRoute
+  '/$lang/offer': typeof LangOfferRoute
+  '/$lang/privacy-policy': typeof LangPrivacyPolicyRoute
+  '/$lang/sitemap': typeof LangSitemapRoute
+  '/$lang': typeof LangIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$lang': typeof LangRouteRouteWithChildren
   '/documents': typeof DocumentsRoute
   '/level-test': typeof LevelTestRoute
   '/offer': typeof OfferRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/sitemap': typeof SitemapRoute
+  '/$lang/documents': typeof LangDocumentsRoute
+  '/$lang/level-test': typeof LangLevelTestRoute
+  '/$lang/offer': typeof LangOfferRoute
+  '/$lang/privacy-policy': typeof LangPrivacyPolicyRoute
+  '/$lang/sitemap': typeof LangSitemapRoute
+  '/$lang/': typeof LangIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$lang'
     | '/documents'
     | '/level-test'
     | '/offer'
     | '/privacy-policy'
     | '/sitemap'
+    | '/$lang/documents'
+    | '/$lang/level-test'
+    | '/$lang/offer'
+    | '/$lang/privacy-policy'
+    | '/$lang/sitemap'
+    | '/$lang/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -89,18 +158,32 @@ export interface FileRouteTypes {
     | '/offer'
     | '/privacy-policy'
     | '/sitemap'
+    | '/$lang/documents'
+    | '/$lang/level-test'
+    | '/$lang/offer'
+    | '/$lang/privacy-policy'
+    | '/$lang/sitemap'
+    | '/$lang'
   id:
     | '__root__'
     | '/'
+    | '/$lang'
     | '/documents'
     | '/level-test'
     | '/offer'
     | '/privacy-policy'
     | '/sitemap'
+    | '/$lang/documents'
+    | '/$lang/level-test'
+    | '/$lang/offer'
+    | '/$lang/privacy-policy'
+    | '/$lang/sitemap'
+    | '/$lang/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  LangRouteRoute: typeof LangRouteRouteWithChildren
   DocumentsRoute: typeof DocumentsRoute
   LevelTestRoute: typeof LevelTestRoute
   OfferRoute: typeof OfferRoute
@@ -145,6 +228,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DocumentsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang': {
+      id: '/$lang'
+      path: '/$lang'
+      fullPath: '/$lang'
+      preLoaderRoute: typeof LangRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -152,11 +242,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$lang/': {
+      id: '/$lang/'
+      path: '/'
+      fullPath: '/$lang/'
+      preLoaderRoute: typeof LangIndexRouteImport
+      parentRoute: typeof LangRouteRoute
+    }
+    '/$lang/sitemap': {
+      id: '/$lang/sitemap'
+      path: '/sitemap'
+      fullPath: '/$lang/sitemap'
+      preLoaderRoute: typeof LangSitemapRouteImport
+      parentRoute: typeof LangRouteRoute
+    }
+    '/$lang/privacy-policy': {
+      id: '/$lang/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/$lang/privacy-policy'
+      preLoaderRoute: typeof LangPrivacyPolicyRouteImport
+      parentRoute: typeof LangRouteRoute
+    }
+    '/$lang/offer': {
+      id: '/$lang/offer'
+      path: '/offer'
+      fullPath: '/$lang/offer'
+      preLoaderRoute: typeof LangOfferRouteImport
+      parentRoute: typeof LangRouteRoute
+    }
+    '/$lang/level-test': {
+      id: '/$lang/level-test'
+      path: '/level-test'
+      fullPath: '/$lang/level-test'
+      preLoaderRoute: typeof LangLevelTestRouteImport
+      parentRoute: typeof LangRouteRoute
+    }
+    '/$lang/documents': {
+      id: '/$lang/documents'
+      path: '/documents'
+      fullPath: '/$lang/documents'
+      preLoaderRoute: typeof LangDocumentsRouteImport
+      parentRoute: typeof LangRouteRoute
+    }
   }
 }
 
+interface LangRouteRouteChildren {
+  LangDocumentsRoute: typeof LangDocumentsRoute
+  LangLevelTestRoute: typeof LangLevelTestRoute
+  LangOfferRoute: typeof LangOfferRoute
+  LangPrivacyPolicyRoute: typeof LangPrivacyPolicyRoute
+  LangSitemapRoute: typeof LangSitemapRoute
+  LangIndexRoute: typeof LangIndexRoute
+}
+
+const LangRouteRouteChildren: LangRouteRouteChildren = {
+  LangDocumentsRoute: LangDocumentsRoute,
+  LangLevelTestRoute: LangLevelTestRoute,
+  LangOfferRoute: LangOfferRoute,
+  LangPrivacyPolicyRoute: LangPrivacyPolicyRoute,
+  LangSitemapRoute: LangSitemapRoute,
+  LangIndexRoute: LangIndexRoute,
+}
+
+const LangRouteRouteWithChildren = LangRouteRoute._addFileChildren(
+  LangRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  LangRouteRoute: LangRouteRouteWithChildren,
   DocumentsRoute: DocumentsRoute,
   LevelTestRoute: LevelTestRoute,
   OfferRoute: OfferRoute,

@@ -11,7 +11,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { LocaleProvider } from "../lib/i18n";
 import { MetaPixel } from "../lib/meta-pixel";
 import { Ga4 } from "../lib/ga4";
 
@@ -116,11 +115,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LocaleProvider defaultLang="EN">
-        <MetaPixel />
-        <Ga4 />
-        <Outlet />
-      </LocaleProvider>
+      <MetaPixel />
+      <Ga4 />
+      <Outlet />
     </QueryClientProvider>
   );
 }

@@ -1,10 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Clock, HelpCircle, Sparkles } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
-import { SITE_ROUTES } from "@/lib/site-links";
+import { siteRoutes } from "@/lib/site-links";
 
 export function LevelTestSection() {
-  const { t } = useLocale();
+  const { t, lang } = useLocale();
 
   return (
     <section id="level-test" className="relative px-4 py-16 sm:py-20">
@@ -26,7 +26,7 @@ export function LevelTestSection() {
                   </li>
                 ))}
               </ul>
-              <Link to={SITE_ROUTES.levelTest} className="btn-primary mt-8">
+              <Link to={siteRoutes(lang).levelTest} className="btn-primary mt-8">
                 {t.levelTest.cta} <ArrowRight className="h-4 w-4" />
               </Link>
               <p className="mt-3 text-xs text-[var(--ink)]/50">{t.levelTest.note}</p>

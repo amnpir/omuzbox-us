@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { useNavigate } from "@tanstack/react-router";
 import { type Lang, translations, htmlLang } from "./translations";
-import { isLang } from "./lang";
+import { replaceLangInPath } from "./locale-path";
 
 type LocaleCtx = {
   lang: Lang;
@@ -14,20 +15,26 @@ const STORAGE_KEY = "omuzbox-lang";
 
 export function LocaleProvider({
   children,
-  defaultLang = "EN",
+  lang: routeLang,
 }: {
   children: ReactNode;
-  defaultLang?: Lang;
+  lang: Lang;
 }) {
-  const [lang, setLangState] = useState<Lang>(() => {
-    if (typeof window === "undefined") return defaultLang;
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved && isLang(saved) ? saved : defaultLang;
-  });
+  const navigate = useNavigate();
+  const [lang, setLangState] = useState<Lang>(routeLang);
 
-  const setLang = (l: Lang) => {
-    setLangState(l);
-    localStorage.setItem(STORAGE_KEY, l);
+  useEffect(() => {
+    setLangState(routeLang);
+    localStorage.setItem(STORAGE_KEY, routeLang);
+  }, [routeLang]);
+
+  const setLang = (next: Lang) => {
+    if (next === lang) return;
+    localStorage.setItem(STORAGE_KEY, next);
+    setLangState(next);
+    const { pathname, search, hash } = window.location;
+    const target = `${replaceLangInPath(pathname, next)}${search}${hash}`;
+    navigate({ to: target, replace: true });
   };
 
   const t = translations[lang];

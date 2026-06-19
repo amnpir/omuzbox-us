@@ -225,7 +225,7 @@ const EN: Translations = {
     progressSub: "A0 → B2 in 6 months",
     ielts: "IELTS 7.5",
     ieltsSub: "first attempt ★",
-    timezone: "Lessons 8am–11pm Eastern — easy scheduling from East to West Coast.",
+    timezone: "Lessons run 24/7 — book a time that works for you, anywhere.",
   },
   stickyCta: {
     label: "Book free trial",
@@ -634,7 +634,7 @@ const RU: Translations = {
     progressSub: "A0 → B2 за 6 мес.",
     ielts: "IELTS 7.5",
     ieltsSub: "с первой попытки ★",
-    timezone: "Уроки с 8:00 до 23:00 по восточному времени США — удобно с любого побережья.",
+    timezone: "Уроки проходят круглосуточно — выбирайте удобное для вас время.",
   },
   stickyCta: {
     label: "Пробный урок",

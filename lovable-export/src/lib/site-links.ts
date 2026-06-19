@@ -1,11 +1,16 @@
-/** Home page section anchors — work from any route on this site. */
-export const homeSection = (id: string) => `/#${id}`;
+import type { Lang } from "./translations";
+import { langPathSegment } from "./locale-path";
 
-export const SITE_ROUTES = {
-  home: "/",
-  levelTest: "/level-test",
-  privacy: "/privacy-policy",
-  offer: "/offer",
-  documents: "/documents",
-  sitemap: "/sitemap",
-} as const;
+export const homeSection = (lang: Lang, id: string) => `/${langPathSegment(lang)}#${id}`;
+
+export function siteRoutes(lang: Lang) {
+  const prefix = `/${langPathSegment(lang)}`;
+  return {
+    home: prefix,
+    levelTest: `${prefix}/level-test`,
+    privacy: `${prefix}/privacy-policy`,
+    offer: `${prefix}/offer`,
+    documents: `${prefix}/documents`,
+    sitemap: `${prefix}/sitemap`,
+  } as const;
+}

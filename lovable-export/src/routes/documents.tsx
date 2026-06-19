@@ -1,15 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { LegalPageView, getLegalPage } from "@/components/site/LegalPageView";
-import { useLocale } from "@/lib/i18n";
+import { LegacyLangRedirect } from "@/lib/legacy-redirect";
 
 export const Route = createFileRoute("/documents")({
-  head: () => ({
-    meta: [{ title: "Documents & Licenses — Omuzbox" }],
-  }),
-  component: DocumentsPage,
+  component: () => <LegacyLangRedirect to="/$lang/documents" />,
 });
-
-function DocumentsPage() {
-  const { lang } = useLocale();
-  return <LegalPageView page={getLegalPage("documents", lang)} />;
-}

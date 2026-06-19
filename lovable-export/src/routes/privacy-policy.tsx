@@ -1,15 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { LegalPageView, getLegalPage } from "@/components/site/LegalPageView";
-import { useLocale } from "@/lib/i18n";
+import { LegacyLangRedirect } from "@/lib/legacy-redirect";
 
 export const Route = createFileRoute("/privacy-policy")({
-  head: () => ({
-    meta: [{ title: "Privacy Policy — Omuzbox" }],
-  }),
-  component: PrivacyPage,
+  component: () => <LegacyLangRedirect to="/$lang/privacy-policy" />,
 });
-
-function PrivacyPage() {
-  const { lang } = useLocale();
-  return <LegalPageView page={getLegalPage("privacy", lang)} />;
-}

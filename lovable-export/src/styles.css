@@ -474,7 +474,8 @@
     radial-gradient(circle at 80% 80%, rgba(32, 170, 253, 0.06), transparent 35%);
 }
 .tg-bot-chat--scroll {
-  height: 280px;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   scroll-behavior: smooth;

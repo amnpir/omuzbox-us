@@ -48,7 +48,7 @@ export function TelegramBotDemo() {
   }, [phase]);
 
   return (
-    <div className="tg-bot-demo overflow-hidden rounded-2xl border border-[#2a3847] bg-[#17212b] text-white">
+    <div className="tg-bot-demo flex h-full min-h-[22rem] flex-col overflow-hidden rounded-2xl border border-[#2a3847] bg-[#17212b] text-white">
       <div className="flex items-center gap-3 border-b border-white/10 bg-[#242f3d] px-4 py-3">
         <span className="grid h-9 w-9 place-items-center rounded-full bg-[#2AABEE] text-white">
           <Send className="h-4 w-4" />
@@ -62,7 +62,7 @@ export function TelegramBotDemo() {
         </span>
       </div>
 
-      <div ref={chatRef} className="tg-bot-chat tg-bot-chat--scroll px-4 py-4">
+      <div ref={chatRef} className="tg-bot-chat tg-bot-chat--scroll min-h-0 flex-1 px-4 py-4">
         <div className="space-y-3">
           <div className="tg-bubble tg-bubble--bot max-w-[88%]">
             <p className="text-sm leading-relaxed text-white/90">{tg.prompt}</p>

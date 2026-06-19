@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
 import { trackCtaClick } from "@/lib/cta";
-import { homeSection, SITE_ROUTES } from "@/lib/site-links";
+import { homeSection, siteRoutes } from "@/lib/site-links";
 import {
   MODE_CONFIG,
   type TestMode,
@@ -95,7 +95,7 @@ export function LevelTestQuiz() {
           <button type="button" onClick={() => setStep("pick")} className="btn-ghost">
             {lang === "RU" ? "Пройти снова" : "Take again"}
           </button>
-          <a href={homeSection("trial")} onClick={trackCtaClick} className="btn-primary">
+          <a href={homeSection(lang, "trial")} onClick={trackCtaClick} className="btn-primary">
             {t.levelTest.ctaTrial ?? t.contact.cta} <ArrowRight className="h-4 w-4" />
           </a>
         </div>
@@ -132,7 +132,7 @@ export function LevelTestQuiz() {
         ))}
       </div>
       <div className="mt-8 flex justify-between gap-3">
-        <Link to={SITE_ROUTES.home} className="btn-ghost text-sm">
+        <Link to={siteRoutes(lang).home} className="btn-ghost text-sm">
           {lang === "RU" ? "На главную" : "Back home"}
         </Link>
         <button type="button" onClick={confirmAnswer} disabled={picked === null} className="btn-primary disabled:opacity-50">

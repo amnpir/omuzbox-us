@@ -5,7 +5,7 @@ import { trackCtaClick } from "@/lib/cta";
 import { homeSection } from "@/lib/site-links";
 
 export function MobileStickyCta() {
-  const { t } = useLocale();
+  const { t, lang } = useLocale();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export function MobileStickyCta() {
       aria-label={t.stickyCta.aria}
     >
       <a
-        href={homeSection("trial")}
+        href={homeSection(lang, "trial")}
         onClick={trackCtaClick}
         className="btn-primary !w-full !py-3.5 text-base shadow-[0_12px_40px_-12px_rgba(32,170,253,.65)]"
       >

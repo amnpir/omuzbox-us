@@ -113,7 +113,7 @@ export function PlatformShowcase() {
               </div>
             </div>
           </div>
-          <div className="flex flex-1 flex-col px-6 pb-6">
+          <div className="flex min-h-0 flex-1 flex-col px-6 pb-6">
             <TelegramBotDemo />
           </div>
         </div>

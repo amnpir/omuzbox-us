@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useRouterState } from "@tanstack/react-router";
+import { currentLanguage, langFromPathname, withAnalyticsContext } from "./analytics-context";
 
 const GA_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID as string | undefined;
 
@@ -40,11 +41,12 @@ export function Ga4() {
   useEffect(() => {
     if (!GA_ID || typeof window === "undefined" || !window.gtag) return;
     const pagePath = `${pathname}${search}`;
-    window.gtag("event", "page_view", {
+    const lang = langFromPathname(pathname);
+    window.gtag("event", "page_view", withAnalyticsContext({
       page_path: pagePath,
       page_location: window.location.origin + pagePath,
       page_title: document.title,
-    });
+    }, lang));
   }, [pathname, search]);
 
   return null;
@@ -52,5 +54,5 @@ export function Ga4() {
 
 export function trackGaEvent(event: string, params?: Record<string, unknown>) {
   if (!GA_ID || typeof window === "undefined" || !window.gtag) return;
-  window.gtag("event", event, params);
+  window.gtag("event", event, withAnalyticsContext(params));
 }

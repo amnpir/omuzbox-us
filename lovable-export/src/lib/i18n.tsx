@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { useNavigate } from "@tanstack/react-router";
 import { type Lang, translations, htmlLang } from "./translations";
 import { replaceLangInPath } from "./locale-path";
+import { trackLanguageChange } from "./analytics";
 
 type LocaleCtx = {
   lang: Lang;
@@ -30,6 +31,7 @@ export function LocaleProvider({
 
   const setLang = (next: Lang) => {
     if (next === lang) return;
+    trackLanguageChange(lang, next);
     localStorage.setItem(STORAGE_KEY, next);
     setLangState(next);
     const { pathname, search, hash } = window.location;

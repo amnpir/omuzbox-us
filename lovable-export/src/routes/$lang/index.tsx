@@ -10,6 +10,7 @@ import { IMAGES, WarmImg, IMAGE_DIMS } from "@/lib/images";
 import { useLocale } from "@/lib/i18n";
 import { localeForLang } from "@/lib/translations";
 import { submitTrial } from "@/lib/submit-trial";
+import { landingCode } from "@/lib/analytics";
 import { trackMetaEvent } from "@/lib/meta-pixel";
 import { trackGaEvent } from "@/lib/ga4";
 import { trackCtaClick } from "@/lib/cta";
@@ -619,7 +620,8 @@ function TrialForm() {
       promo: promo || undefined,
       audience: tab === "kid" ? "child" : "adult",
       consent: true,
-      landing: "us-55",
+      language: lang,
+      landing: landingCode(lang),
       eventId,
     });
     if (result.ok) {

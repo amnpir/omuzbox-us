@@ -8,6 +8,7 @@ export type TrialPayload = {
   audience: "adult" | "child";
   consent?: boolean;
   landing?: string;
+  language?: string;
   eventId?: string;
   eventSourceUrl?: string;
   fbp?: string;
@@ -52,6 +53,7 @@ export async function sendMetaLead(payload: TrialPayload, eventId: string): Prom
         custom_data: {
           landing: payload.landing ?? "us-55",
           audience: payload.audience,
+          language: payload.language ?? "EN",
         },
       },
     ],

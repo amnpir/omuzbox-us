@@ -1,3 +1,6 @@
+import type { Lang } from "./translations";
+import { currentLanguage, landingCode } from "./analytics-context";
+
 export type TrialPayload = {
   name: string;
   email: string;
@@ -6,6 +9,7 @@ export type TrialPayload = {
   audience: "adult" | "child";
   consent: boolean;
   landing?: string;
+  language?: Lang;
   eventId?: string;
 };
 
@@ -23,9 +27,11 @@ export function buildTrialPayload(payload: TrialPayload): TrialPayload & {
   fbc?: string;
   clientUserAgent?: string;
 } {
+  const lang = payload.language ?? currentLanguage();
   return {
     ...payload,
-    landing: payload.landing ?? "us-55",
+    language: lang,
+    landing: payload.landing ?? landingCode(lang),
     eventSourceUrl: typeof window !== "undefined" ? window.location.href : undefined,
     fbp: readCookie("_fbp"),
     fbc: readCookie("_fbc"),

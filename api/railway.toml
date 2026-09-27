@@ -7,4 +7,4 @@ buildCommand = "npm install && npm run build"
 cronSchedule = "0 0 1 1 *"
 startCommand = "echo 'omuzbox-us api disabled' && exit 0"
 restartPolicyType = "NEVER"
-restartPolicyMaxRetries = 0
+restartPolicyMaxRetries = 1

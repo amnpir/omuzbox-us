@@ -9,4 +9,4 @@ buildCommand = "bun install && bun run build"
 cronSchedule = "0 0 1 1 *"
 startCommand = "echo 'omuzbox-us web disabled' && exit 0"
 restartPolicyType = "NEVER"
-restartPolicyMaxRetries = 0
+restartPolicyMaxRetries = 1
